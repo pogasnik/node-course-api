@@ -5,7 +5,7 @@ var {ObjectID} = require('mongodb');
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todos');
 var {User} = require('./models/users');
-
+var {authenticate} = require('./middleware/authenticate');
 var app = express();
 var port = process.env.PORT || 3000;
 
@@ -98,6 +98,11 @@ app.patch('/todos/:id' , (req, res) => {
         }
         res.send({todo});
     }).catch((e) => res.status(400).send());
+});
+
+
+app.get('/users/me', authenticate, (req, res) => {
+    res.send(req.user);
 });
 
 app.listen(port, () => {
